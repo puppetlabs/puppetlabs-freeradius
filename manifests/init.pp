@@ -2,9 +2,9 @@
 # ===========================
 
 class freeradius (
-  String  $package         = $::params::freeradius::package,
-  String  $service         = $::params::freeradius::service,
-  String  $conf_dir        = $::params::freeradius::conf_dir,
+  String  $package         = $::freeradius::params::package,
+  String  $service         = $::freeradius::params::service,
+  String  $conf_dir        = $::freeradius::params::conf_dir,
   String  $service_ensure  = 'running',
   Boolean $eap_enabled     = false,
 ) inherits ::freeradius::params {
@@ -12,27 +12,18 @@ class freeradius (
     ensure  => present,
   }
 
-  service {$service:
-    ensure   => $service_ensure,
+  file {"${conf_dir}/radiusd.conf":
+    ensure   => present,
+    content  => epp('freeradius/radiusd.conf.epp',{
+        'eap_enabled'  => $eap_enabled,
+      }),
+    owner    => 'freerad',
+    mode     => '0600',
+    require  => Package[$package],
+    notify   => Service[$service],
   }
 
-  if $eap_enabled {
-    concat { "${confdir}/eap.conf":
-      ensure   => present,
-      require  => Package[$package],
-      notify   => Service[$service],
-    }
-
-    concat::fragment {'start_of_eap_conf':
-      target  => "${confdir}/eap.conf",
-      content => "eap {\n",
-      order   => '01'
-    }
-
-    concat::fragment {'end_of_eap_conf':
-      target  => "${confdir}/eap.conf",
-      content => "}\n",
-      order   => '999'
-    }
+  service {$service:
+    ensure   => $service_ensure,
   }
 }

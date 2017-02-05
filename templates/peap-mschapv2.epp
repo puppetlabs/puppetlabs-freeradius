@@ -1,0 +1,9 @@
+    mschapv2 {
+    }
+
+    peap {
+      default_eap_type = mschapv2
+      copy_request_to_tunnel = yes
+      use_tunneled_reply = yes
+      virtual_server = "inner-tunnel"
+    }
