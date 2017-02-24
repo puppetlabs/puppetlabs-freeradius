@@ -2,10 +2,11 @@
       String  $cert_file_path,
       String  $ca_file_path,
       String  $dh_file_path,
+      String  $pki_dir,
 | -%>
       tls {
-            certdir = /radius_pki
-            #cadir = /radius_pki
+            certdir = <%= $pki_dir %>
+            cadir = <%= $pki_dir %>
 
             #private_key_password = test
             private_key_file = <%= $private_key_path %>
@@ -26,8 +27,8 @@
             #  3) uncomment the line below.
             #  5) Restart radiusd
 
-            #check_crl = yes
-            #CA_path = ${cadir}
+            check_crl = yes
+            CA_path = ${cadir}
 
             #check_cert_issuer = "/C=GB/ST=Berkshire/L=Newbury/O=My Company Ltd"
             check_cert_cn = %{User-Name}
