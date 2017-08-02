@@ -31,7 +31,7 @@
             CA_path = ${cadir}
 
             #check_cert_issuer = "/C=GB/ST=Berkshire/L=Newbury/O=My Company Ltd"
-            check_cert_cn = %{User-Name}
+            #check_cert_cn = %{User-Name}
 
             cipher_list = "DEFAULT"
 

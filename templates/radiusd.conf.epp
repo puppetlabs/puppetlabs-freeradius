@@ -483,8 +483,8 @@ log {
   #
   #  allowed values: {no, yes}
   #
-  auth_badpass = no
-  auth_goodpass = no
+  auth_badpass = yes
+  auth_goodpass = yes
 
   #  Log additional text at the end of the "Login OK" messages.
   #  for these to work, the "auth" and "auth_goopass" or "auth_badpass"
@@ -495,8 +495,8 @@ log {
   #  this expansion can be slow, and can negatively impact server
   #  performance.
   #
-# msg_goodpass = ""
-# msg_badpass = ""
+  msg_goodpass = "CERTNAME: %{TLS-Client-Cert-Common-Name}"
+  msg_badpass = "CERTNAME: %{TLS-Client-Cert-Common-Name}"
 }
 
 #  The program to execute to do concurrency checks.
