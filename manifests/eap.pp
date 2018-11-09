@@ -72,7 +72,7 @@ class freeradius::eap (
 
   exec {'create_dh_file':
     path     => "/usr/bin",
-    command  => "openssl dhparam -check -text -5 1024 -out ${conf_dir}/pki/dh",
+    command  => "openssl dhparam -check -text -out ${conf_dir}/pki/dh 2048",
     creates  => "${conf_dir}/pki/dh",
     notify   => Service[$service],
   }
