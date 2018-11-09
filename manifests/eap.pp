@@ -6,15 +6,21 @@ class freeradius::eap (
   Boolean  $crl_local_web_fetch_enabled     = false,
   String   $package                         = "$::freeradius::params::package",
   String   $service                         = "$::freeradius::params::service",
-  String   $conf_dir                        = "$::freeradius::params::conf_dir",
+  String   $mods_dir                        = "$::freeradius::params::mods_dir",
   String   $private_key_source_path         = "${::settings::confdir}/ssl/private_keys/${::clientcert}.pem",
   String   $cert_file_source_path           = "${::settings::confdir}/ssl/certs/${::clientcert}.pem",
   String   $ca_file_source_path             = "${::settings::confdir}/ssl/certs/ca.pem",
   String   $pki_dir                         = "${::freeradius::params::conf_dir}/pki",
   Boolean  $peap_mschapv2                   = false,
-) {
+) inherits ::freeradius::params {
 
-  concat { "${conf_dir}/eap.conf":
+  if versioncmp($::freeradius::params::rad_version, '3') >= 0 {
+    $eap_filename = 'eap'
+  } else {
+    $eap_filename = 'eap.conf'
+  }
+  
+  concat { "${mods_dir}/${eap_filename}":
     ensure          => present,
     ensure_newline  => true,
     require         => Package[$package],
@@ -22,19 +28,19 @@ class freeradius::eap (
   }
 
   concat::fragment {'eap_conf_start':
-    target  => "${conf_dir}/eap.conf",
+    target  => "${mods_dir}/${eap_filename}",
     content => "eap {",
     order   => '01',
   }
 
   concat::fragment {'eap_conf_general':
-    target  => "${conf_dir}/eap.conf",
+    target  => "${mods_dir}/${eap_filename}",
     content => epp('freeradius/eap_general_params.epp'),
     order   => '02'
   }
 
   concat::fragment {'eap_conf_end':
-    target  => "${conf_dir}/eap.conf",
+    target  => "${mods_dir}/${eap_filename}",
     content => "}",
     order   => '999',
   }
@@ -72,8 +78,8 @@ class freeradius::eap (
 
   exec {'create_dh_file':
     path     => "/usr/bin",
-    command  => "openssl dhparam -check -text -out ${conf_dir}/pki/dh 2048",
-    creates  => "${conf_dir}/pki/dh",
+    command  => "openssl dhparam -check -text -out ${pki_dir}/dh 2048",
+    creates  => "${pki_dir}/dh",
     notify   => Service[$service],
   }
 
@@ -102,8 +108,8 @@ class freeradius::eap (
   }
 
   concat::fragment {'eap_tls_conf':
-    target  => "${conf_dir}/eap.conf",
-    content => epp('freeradius/eap_tls.epp', {
+    target  => "${mods_dir}/${eap_filename}",
+    content => epp("freeradius/eap_tls.${rad_version}.epp", {
       'private_key_path'  => "${pki_dir}/server.key",
       'cert_file_path'    => "${pki_dir}/server.crt",
       'ca_file_path'      => "${pki_dir}/ca.crt",
@@ -115,8 +121,8 @@ class freeradius::eap (
 
   if peap_mschapv2 {
     concat::fragment {'eap_peap_mschapv2_conf':
-      target  => "${conf_dir}/eap.conf",
-      content => epp('freeradius/peap-mschapv2.epp'),
+      target  => "${mods_dir}/${eap_filename}",
+      content => epp("freeradius/peap-mschapv2.${rad_version}.epp"),
       order   => '04'
     }
   }

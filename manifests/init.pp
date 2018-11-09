@@ -14,7 +14,7 @@ class freeradius (
 
   file {"${conf_dir}/radiusd.conf":
     ensure   => present,
-    content  => epp('freeradius/radiusd.conf.epp',{
+    content  => epp("freeradius/radiusd.conf.${rad_version}.epp",{
         'eap_enabled'  => $eap_enabled,
       }),
     owner    => 'freerad',
