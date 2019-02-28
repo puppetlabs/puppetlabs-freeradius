@@ -7,7 +7,7 @@ class freeradius::params {
             $package   = 'freeradius'
             $service   = 'freeradius'
             $conf_dir  = '/etc/freeradius'
-            $mods_dir   = "${conf_dir}"
+            $mods_dir   = $conf_dir
             $rad_version   = '2'
           }
         }
