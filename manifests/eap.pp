@@ -12,6 +12,7 @@ class freeradius::eap (
   String   $ca_file_source_path             = "${::settings::confdir}/ssl/certs/ca.pem",
   String   $pki_dir                         = "${::freeradius::params::conf_dir}/pki",
   Boolean  $peap_mschapv2                   = false,
+  Boolean $md5                              = false,
 ) inherits ::freeradius::params {
 
   if versioncmp($::freeradius::params::rad_version, '3') >= 0 {
@@ -123,6 +124,14 @@ class freeradius::eap (
     concat::fragment {'eap_peap_mschapv2_conf':
       target  => "${mods_dir}/${eap_filename}",
       content => epp("freeradius/peap-mschapv2.${rad_version}.epp"),
+      order   => '04'
+    }
+  }
+
+  if md5 {
+    concat::fragment {'eap_md5_conf':
+      target  => "${mods_dir}/${eap_filename}",
+      content => epp("freeradius/md5.${rad_version}.epp"),
       order   => '04'
     }
   }
