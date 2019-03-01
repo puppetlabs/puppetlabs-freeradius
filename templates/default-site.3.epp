@@ -629,9 +629,9 @@ accounting {
 	#  Note that accounting requests which are proxied
 	#  are also logged in the detail file.
 <% if $accounting_syslog { -%>
-    log_accounting
+       log_accounting
 <% } else { -%>
-    detail
+       detail
 <% } -%>
 
 #	daily
