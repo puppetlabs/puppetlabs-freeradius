@@ -12,7 +12,7 @@ class freeradius::eap (
   String   $ca_file_source_path             = "${::settings::confdir}/ssl/certs/ca.pem",
   String   $pki_dir                         = "${::freeradius::params::conf_dir}/pki",
   Boolean  $peap_mschapv2                   = false,
-  Boolean $md5                              = false,
+  Boolean  $md5                             = false,
 ) inherits ::freeradius::params {
 
   if versioncmp($::freeradius::params::rad_version, '3') >= 0 {
