@@ -38,13 +38,15 @@ class freeradius (
       notify  => Service[$service],
     }
 
-    file {"${conf_dir}/mods-available/linelog":
-      ensure  => present,
-      content => epp("freeradius/linelog.${rad_version}.epp"),
-      owner   => 'freerad',
-      mode    => '0600',
-      require => Package[$package],
-      notify  => Service[$service],
+    if $accounting_syslog {
+      file {"${conf_dir}/mods-available/linelog":
+        ensure  => present,
+        content => epp("freeradius/linelog.${rad_version}.epp"),
+        owner   => 'freerad',
+        mode    => '0600',
+        require => Package[$package],
+        notify  => Service[$service],
+      }
     }
   }
 

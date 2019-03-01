@@ -120,7 +120,7 @@ class freeradius::eap (
     order   => '03'
   }
 
-  if peap_mschapv2 {
+  if $peap_mschapv2 {
     concat::fragment {'eap_peap_mschapv2_conf':
       target  => "${mods_dir}/${eap_filename}",
       content => epp("freeradius/peap-mschapv2.${rad_version}.epp"),
@@ -128,7 +128,7 @@ class freeradius::eap (
     }
   }
 
-  if md5 {
+  if $md5 {
     concat::fragment {'eap_md5_conf':
       target  => "${mods_dir}/${eap_filename}",
       content => epp("freeradius/md5.${rad_version}.epp"),
