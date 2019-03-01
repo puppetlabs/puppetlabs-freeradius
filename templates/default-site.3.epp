@@ -628,11 +628,10 @@ accounting {
 	#  Create a 'detail'ed log of the packets.
 	#  Note that accounting requests which are proxied
 	#  are also logged in the detail file.
-
 <% if $accounting_syslog { -%>
-  log_accounting
+    log_accounting
 <% } else { -%>
-  detail
+    detail
 <% } -%>
 
 #	daily
@@ -737,11 +736,11 @@ post-auth {
 	#  the one in the reply if it is just a copy of the one in the request, so
 	#  we don't end up with two User-Name attributes.
 
-	if (session-state:User-Name && reply:User-Name && request:User-Name && (reply:User-Name == request:User-Name)) {
-		update reply {
-			&User-Name !* ANY
-		}
-	}
+	#if (session-state:User-Name && reply:User-Name && request:User-Name && (reply:User-Name == request:User-Name)) {
+	#	update reply {
+	#		&User-Name !* ANY
+	#	}
+	#}
 	update {
 		&reply: += &session-state:
 	}
