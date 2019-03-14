@@ -146,9 +146,9 @@ linelog log_accounting {
 	#
 	#
 	Accounting-Request {
-		Start = "RADIUS Connect: [%{User-Name}] (did %{Called-Station-Id} cli %{Calling-Station-Id} port %{NAS-Port} ip %{Framed-IP-Address})"
-		Stop = "RADIUS Disconnect: [%{User-Name}] (did %{Called-Station-Id} cli %{Calling-Station-Id} port %{NAS-Port} ip %{Framed-IP-Address}) %{Acct-Session-Time} seconds"
-		Interim-Update = "RADIUS Update: %{User-Name} %{Framed-Ip-Address} %{Calling-Station-Id}"
+		Start = "RADIUS-Accounting-Start: %{User-Name} %{Calling-Station-Id} %{Framed-Ip-Address}"
+		Stop = "RADIUS-Accounting-Stop: %{User-Name} %{Calling-Station-Id} %{Framed-Ip-Address} %{Acct-Session-Time} seconds"
+		Interim-Update = "RADIUS-Accounting-Interim-Update: %{User-Name} %{Calling-Station-Id} %{Framed-Ip-Address}"
   
 		#  Don't log anything for these packets.
 		Alive = ""
