@@ -9,6 +9,7 @@ class freeradius (
   Boolean $eap_enabled                       = false,
   Boolean $accounting_syslog                 = false,
   Boolean $username_overwrite_with_certname  = false,
+  Array   $realm_nas_restrict                = [],
 ) inherits ::freeradius::params {
   package {$package:
     ensure  => present,
@@ -31,6 +32,17 @@ class freeradius (
       content => epp("freeradius/default-site.${rad_version}.epp",{
           'accounting_syslog'                => $accounting_syslog,
           'username_overwrite_with_certname' => $username_overwrite_with_certname,
+        }),
+      owner   => 'freerad',
+      mode    => '0600',
+      require => Package[$package],
+      notify  => Service[$service],
+    }
+
+    file {"${conf_dir}/sites-available/inner-tunnel":
+      ensure  => present,
+      content => epp("freeradius/inner-tunnel.${rad_version}.epp",{
+          'realm_nas_restrict' => $realm_nas_restrict,
         }),
       owner   => 'freerad',
       mode    => '0600',
