@@ -9,7 +9,7 @@ class freeradius (
   Boolean $eap_enabled                       = false,
   Boolean $accounting_syslog                 = false,
   Boolean $username_overwrite_with_certname  = false,
-  Array   $realm_nas_restrict                = [],
+  Array   $realm_ssid_restrict               = [],
 ) inherits ::freeradius::params {
   package {$package:
     ensure  => present,
@@ -42,7 +42,7 @@ class freeradius (
     file {"${conf_dir}/sites-available/inner-tunnel":
       ensure  => present,
       content => epp("freeradius/inner-tunnel.${rad_version}.epp",{
-          'realm_nas_restrict' => $realm_nas_restrict,
+          'realm_ssid_restrict' => $realm_ssid_restrict,
         }),
       owner   => 'freerad',
       mode    => '0600',
