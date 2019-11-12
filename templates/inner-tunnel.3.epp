@@ -113,7 +113,7 @@ authorize {
   rewrite_called_station_id
 
   <% $realm_ssid_restrict.each |Hash $realm| { -%>
-  if (&User-Name =~ /<%= $realm['realm_name'] %>/) {
+  if (&User-Name =~ /<%= $realm['realm_name'] %>/ && &NAS-Port-Type == 19) {
     switch &Called-Station-SSID {
       <% $realm['ssids'].each |String $ssid| { -%>
       case "<%= $ssid %>" {
